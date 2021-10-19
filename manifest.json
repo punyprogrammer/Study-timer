@@ -15,5 +15,9 @@
     "default_title":"Study Timer",
     "default_popup":"popup/popup.html"
 
+},
+"permissions":["storage","alarms","notifications"],
+"background":{
+    "service_worker":"background.js"
 }
 }
