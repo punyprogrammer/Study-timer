@@ -9,9 +9,19 @@ chrome.storage.local.get(["timer","isRunning"],(res)=>{
      if(res.isRunning)
      {
         let timer=res.timer+1;
-        console.log(timer);
+        let isRunning=true  ;
+        if(timer==60*25){
+this.ServiceWorkerRegistration.showNotification("Study Timer",{
+body:"25 minutes has expired!!",
+icon:"icon.png",
+})
+timer=0;
+isRunning=false
+        }
+
         chrome.storage.local.set({
             timer,
+            isRunning,
         })
      }
 })

@@ -1,14 +1,48 @@
 let tasks=[]
+const currentTime=document.getElementById("time")
+function updateTime(){
+  chrome.storage.local.get(["timer"],(res)=>{
+  //res.timer =60*24
+  const minutes=`${25 -Math.ceil(res.timer/60)}`.padStart(2,'0');
+  let seconds="00"
+  console.log(res.timer)
+if(res.timer%60!=0)
+{
+
+ seconds=`${60-res.timer%60}`.padStart(2,"0");
+}
+
+  currentTime.textContent=`${minutes}:${seconds}`
+
+  })
+}
+updateTime()
+setInterval(updateTime,1000)
 const addTaskBtn =document.getElementById("add-task-btn")
+const resetTimerBtn=document.getElementById("reset-timer-btn")
 addTaskBtn.addEventListener("click",()=>addTask())
 const startTimerBtn=document.getElementById('start-timer-btn')
 //add a event listener to start the timer so that the
 //background script can start running on the click of the start timer button
 startTimerBtn.addEventListener("click",()=>{
-chrome.storage.local.set({
-isRunning:true
+chrome.storage.local.get(["isRunning"],(res)=>{
+    chrome.storage.local.set({
+        isRunning:!res.isRunning,
+
+        },()=>{
+startTimerBtn.textContent=!res.isRunning?"Pause Timer":"Start Timer"
+        })
+})
 
 })
+//add a event reset  timer button
+resetTimerBtn.addEventListener("click",()=>{
+    chrome.storage.local.set({
+timer:0,
+isRunning:false,
+    },()=>{
+startTimerBtn.textContent="Start Timer"
+    })
 })
 
 //whenever the popup pop ups
